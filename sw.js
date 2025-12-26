@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_NAME = 'prism-v-v1'; // 버전을 올리려면 이 변수를 변경하세요 (예: v2)
+const CACHE_NAME = 'prism-v-v1.1'; // 버전을 올리려면 이 변수를 변경하세요 (예: v2)
 const ASSETS = [
     './',
     './index.html',
@@ -38,3 +38,4 @@ self.addEventListener('fetch', (event) => {
     );
 
 });
+
