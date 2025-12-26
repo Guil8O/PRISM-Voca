@@ -2605,6 +2605,28 @@
 
 
     <script>
+
+
+        /* --- [추가] Service Worker 등록 로직 --- */
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => {
+                    console.log('SW Registered:', reg);
+
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // [수정] 번역 함수 t() 사용
+                                if (confirm(t('update_found'))) {
+                                    window.location.reload();
+                                }
+                            }
+                        };
+                    };
+                })
+                .catch(err => console.log('SW Registration Fail:', err));
+        }
         /* --- [JS 교체] 다국어 번역 데이터베이스 (5개국어) --- */
         /* --- [JS 수정] 1. 다국어 데이터 및 통합 번역 함수 --- */
         const TRANSLATIONS = {
@@ -2701,7 +2723,10 @@
                 stat_weak: "취약",
                 no_matching_word: "해당하는 단어가 없습니다.",
                 recent_quiz: "최근 퀴즈",
-                recent_mod: "최근 수정",
+                recent_mod: "최근 수정", update_found: "새로운 업데이트가 있습니다. 재시작 하시겠습니까?",
+                update_checked: "업데이트를 확인했습니다.\n새 버전이 있다면 잠시 후 알림이 뜹니다.",
+                update_fail: "업데이트 확인 실패: 오프라인 상태이거나 오류가 발생했습니다.",
+                sw_unsupported: "이 브라우저는 앱 업데이트 기능을 지원하지 않습니다.",
 
                 q_type_sel_l2m: "단어 보고 뜻 고르기",
                 q_type_sel_m2l: "뜻 보고 단어 고르기",
@@ -2780,6 +2805,10 @@
                 confirm_del: "Are you sure?",
                 restore_confirm: "Overwrite data and restore? App will restart.",
                 reset_confirm: "Are you sure you want to reset all data?",
+                update_found: "New update available. Reload now?",
+                update_checked: "Checked for updates.\nYou will be notified if a new version exists.",
+                update_fail: "Update check failed. Offline or error occurred.",
+                sw_unsupported: "This browser does not support app updates.",
                 theme_dark: "Dark 🌙",
                 theme_light: "Light ☀️",
                 backup_data: "💾 Backup Data",
@@ -2868,6 +2897,10 @@
                 empty_word: "単語がありません。<br>'+'ボタンで追加してください。",
                 new_group_title: "単語帳を作成 📁",
                 new_group_desc: "単語帳の名前と説明を入力してください。",
+                update_found: "新しいアップデートがあります。再起動しますか？",
+                update_checked: "アップデートを確認しました。\n新しいバージョンがあれば通知されます。",
+                update_fail: "確認に失敗しました。オフラインかエラーが発生しました。",
+                sw_unsupported: "このブラウザはアプリの更新をサポートしていません。",
                 grp_name: "単語帳名",
                 grp_desc: "説明 (任意)",
                 create: "作成",
@@ -2979,6 +3012,10 @@
                 stat_avg_acc: "平均正确",
                 stat_weak: "弱项",
                 no_matching_word: "没有找到对应的单词。",
+                update_found: "发现新版本。是否重新加载？",
+                update_checked: "已检查更新。\n如果有新版本，稍后会通知您。",
+                update_fail: "检查失败。离线或发生错误。",
+                sw_unsupported: "此浏览器不支持应用更新。",
                 grp_name: "名称",
                 grp_desc: "说明",
                 create: "创建",
@@ -3085,6 +3122,10 @@
                 empty_word: "No hay palabras.<br>Toca '+' para añadir.",
                 new_group_title: "Crear Grupo 📁",
                 new_group_desc: "Introduce nombre y descripción.",
+                update_found: "Nueva actualización disponible. ¿Recargar ahora?",
+                update_checked: "Buscando actualizaciones.\nSe le notificará si existe una nueva versión.",
+                update_fail: "Error al buscar actualizaciones. Sin conexión o error.",
+                sw_unsupported: "Este navegador no admite actualizaciones de aplicaciones.",
                 grp_name: "Nombre",
                 grp_desc: "Descripción",
                 create: "Crear",
@@ -3582,7 +3623,8 @@
             <button class="glass-btn" onclick="triggerImport()">${t('load_data')}</button>
             <input type="file" id="file-import" style="display:none;" onchange="importData(this)">
             
-            <button class="glass-btn" onclick="alert('${t('curr_ver')}')" style="margin-top:15px; border-color:var(--primary);">${t('check_update')}</button>
+            <!-- 업데이트 버튼 수정: 실제 SW 업데이트 체크 함수 호출 -->
+            <button class="glass-btn" onclick="checkAppUpdate()" style="margin-top:15px; border-color:var(--primary);">${t('check_update')}</button>
             <hr style="border:0; border-top:1px solid var(--glass-border); margin:15px 0;">
             <button class="glass-btn" onclick="resetData()" style="color:var(--danger); border-color:var(--danger);">${t('reset_data')}</button>
         </div>
@@ -6364,7 +6406,26 @@
         }
 
 
-
+        /* --- [수정] 수동 업데이트 확인 함수 (다국어 적용) --- */
+        function checkAppUpdate() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.update().then(() => {
+                        // [수정] 번역 함수 t() 사용
+                        alert(t('update_checked'));
+                    }).catch(err => {
+                        // [수정] 번역 함수 t() 사용
+                        alert(t('update_fail'));
+                    });
+                }).catch(() => {
+                    // 혹시 모를 에러 대비
+                    alert(t('update_fail'));
+                });
+            } else {
+                // [수정] 번역 함수 t() 사용
+                alert(t('sw_unsupported'));
+            }
+        }
 
 
 

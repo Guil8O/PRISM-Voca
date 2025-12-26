@@ -1,22 +1,23 @@
 // sw.js
-const CACHE_NAME = 'glass-voca-v1';
+const CACHE_NAME = 'prism-v-v1'; // 버전을 올리려면 이 변수를 변경하세요 (예: v2)
 const ASSETS = [
     './',
-    './index.html',
-    // 폰트나 아이콘 등의 외부 리소스도 여기에 포함 가능
-    'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap'
+    './main.html',
+    './manifest.json',
+    './Asset/PrismV_dark.png', // 이미지 경로가 맞는지 확인 필요
+    './Asset/PrismV_light.png'
 ];
 
-// 설치: 파일 캐싱
+// 설치 (캐싱)
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => cache.addAll(ASSETS))
-            .then(() => self.skipWaiting())
+            .then(() => self.skipWaiting()) // 즉시 활성화
     );
 });
 
-// 활성화: 구버전 캐시 정리
+// 활성화 (구버전 캐시 삭제)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
@@ -25,14 +26,14 @@ self.addEventListener('activate', (event) => {
                     if (key !== CACHE_NAME) return caches.delete(key);
                 })
             );
-        })
+        }).then(() => self.clients.claim())
     );
 });
 
-// fetch: 네트워크 우선, 실패시 캐시 사용
+// 요청 가로채기 (오프라인 지원)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        fetch(event.request)
-            .catch(() => caches.match(event.request))
+        caches.match(event.request)
+            .then((response) => response || fetch(event.request))
     );
 });
