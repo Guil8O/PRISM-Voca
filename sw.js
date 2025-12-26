@@ -2,7 +2,7 @@
 const CACHE_NAME = 'prism-v-v1'; // 버전을 올리려면 이 변수를 변경하세요 (예: v2)
 const ASSETS = [
     './',
-    './main.html',
+    './index.html',
     './manifest.json',
     './Asset/PrismV_dark.png', // 이미지 경로가 맞는지 확인 필요
     './Asset/PrismV_light.png'
@@ -36,4 +36,5 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request)
             .then((response) => response || fetch(event.request))
     );
+
 });
