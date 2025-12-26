@@ -1,0 +1,32 @@
+{
+  "name": "Prism Voca",
+  "short_name": "PrismV",
+  "theme_color": "#270082",
+  "background_color": "#1E1E48",
+  "start_url": "./main.html",
+  "display": "standalone",
+  "orientation": "any",
+  "prefer_related_applications": false,
+  "categories": [
+    "education",
+    "lifestyle",
+    "personalization"
+  ],
+  "icons": [
+    {
+      "src": "Asset/PrismV_icon_x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "Asset/PrismV_icon_x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "Asset/PrismV_icon_x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
