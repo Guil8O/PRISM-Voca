@@ -3,7 +3,7 @@
   "short_name": "PrismV",
   "theme_color": "#270082",
   "background_color": "#1E1E48",
-  "start_url": "./main.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "any",
   "prefer_related_applications": false,
@@ -29,4 +29,5 @@
       "type": "image/png"
     }
   ]
+
 }
