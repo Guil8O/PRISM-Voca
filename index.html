@@ -538,6 +538,18 @@
             box-sizing: border-box;
         }
 
+        .item-left-col {
+            width: 50px;
+            /* PC에서는 넉넉하게 */
+            min-width: 50px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            /* PC에서는 여유있게 */
+        }
+
         /* 태블릿/모바일에서 열 개수만 강제 */
         @media (max-width: 900px) {
             .smart-group-grid {
@@ -1211,105 +1223,186 @@
             margin-top: 5px;
         }
 
+        /* =========================================
+   [모바일 최적화 수정] 480px 이하 화면 대응
+   ========================================= */
         @media (max-width: 480px) {
 
-            /* 1. 리스트 아이템: 패딩과 간격 최적화 */
-            .word-item {
-                padding: 6px 10px !important;
-                min-height: 55px;
-                gap: 2px !important;
-                /* 내부 간격을 최소화 */
+            .header-card-inner {
+                padding: 12px 10px !important;
+                /* 기존 20px에서 줄임 */
             }
 
-            /* [핵심 수정] 번호 영역 (왼쪽 박스) */
-            .word-item>div:first-child {
-                flex: 0 0 26px !important;
-                /* 너비 26px로 고정 (줄어들지 않음) */
-                width: 26px !important;
-                max-width: 26px !important;
-                margin-right: 4px !important;
-                /* 단어와의 간격 */
-
-                /* 정중앙 정렬 */
+            /* --- 1. 헤더 툴바 레이아웃 --- */
+            .glass-toolbar {
+                padding: 4px 6px !important;
+                /* 툴바 패딩 축소 */
+                gap: 4px !important;
+                height: auto !important;
+                min-height: 32px !important;
+                /* 툴바 최소 높이 더 축소 */
                 display: flex;
+                align-items: center;
+                flex-wrap: nowrap !important;
+            }
+
+            /* 필터 그룹 (별표 + 텍스트 버튼들) 간격 조절 */
+            .filter-group {
+                gap: 3px !important;
+                flex: 1 1 auto;
+                width: auto;
+                display: flex;
+                align-items: center;
+            }
+
+            /* [핵심] 모든 필터/관리 버튼 공통 축소 */
+            .icon-btn,
+            .quiz-start-btn {
+                width: 20px !important;
+                height: 20px !important;
+                min-width: 20px !important;
+                /* 줄어들지 않는 현상 방지 */
+                min-height: 20px !important;
+                font-size: 0.6rem !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
                 align-items: center;
                 justify-content: center;
             }
 
-            /* [핵심 수정] 번호 텍스트 */
-            .item-number {
+            /* [수정 1 해결] 즐겨찾기(별) 버튼: 텍스트 버튼과 달리 '정원형' 강제 */
+            .filter-icon-btn.btn-fav {
+                width: 32px !important;
+                min-width: 32px !important;
+                height: 32px !important;
+                /* 높이와 같은 너비 */
+                flex: 0 0 32px !important;
+                /* 절대 줄어들거나 늘어나지 않음 (고정) */
+                padding: 0 !important;
+                /* 내부 패딩 제거 */
+                font-size: 1rem !important;
+                /* 별 아이콘 크기는 적당히 유지 */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50% !important;
+                /* 완전한 원형 */
+            }
+
+            /* 관리 버튼 (우측 끝) */
+            .manage-btn {
+                flex: 0 0 auto;
+                margin-left: auto !important;
+                /* 오른쪽 끝으로 밀기 */
                 width: auto !important;
-                /* 글로벌 설정 덮어쓰기 */
+                /* 내용물만큼만 차지 */
+                min-width: 0 !important;
+            }
+
+            .filter-icon-btn,
+            .manage-btn {
+                padding: 8px 7px !important;
                 font-size: 0.7rem !important;
-                /* 3자리수 대비 폰트 축소 */
-                font-weight: 700;
-                letter-spacing: -0.5px;
-                /* 자간을 좁혀서 공간 확보 */
-                text-align: center;
-                line-height: 1;
+                /* ★ 핵심 수정: 좌우 패딩을 8px -> 4px로 절반 축소 */
             }
 
-            /* 2. 단어 내용 영역 */
+
+
+
+            /* --- 2. 단어 리스트 아이템 (카드) 최적화 --- */
+            .word-item {
+                /* 카드 좌우 패딩을 줄여 공간 확보 */
+                padding: 12px 10px !important;
+                gap: 0 !important;
+                /* flex gap 대신 개별 마진으로 제어 */
+            }
+
+            /* [좌측] 즐겨찾기/순번 영역 */
+            .item-left-col {
+                /* 기존 width 강제 해제 후 마진으로 제어 */
+                width: auto !important;
+                min-width: auto !important;
+                flex: 0 0 auto !important;
+
+                /* 요청하신대로 카드 끝과 단어 사이 여백 조정 */
+                margin-left: 0 !important;
+                /* 카드 왼쪽 끝과의 간격 (padding이 있으므로 0) */
+                margin-right: 10px !important;
+                /* 단어 텍스트와의 간격 10px 고정 */
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .star-icon-img {
+                width: 30%;
+                height: 30%;
+            }
+
+            /* 별 아이콘/숫자 래퍼 크기 축소 */
+            .star-index-wrapper {
+                width: 26px !important;
+                height: 26px !important;
+            }
+
+            .star-number {
+                font-size: 0.6rem !important;
+                /* 숫자 폰트 줄임 */
+            }
+
+            /* [중앙] 단어 텍스트 영역 */
             .word-content {
-                flex: 1;
+                /* 남은 공간 모두 차지 */
+                flex: 1 1 auto;
                 min-width: 0;
-                margin: 0 !important;
+                /* 텍스트 말줄임(...)이 작동하려면 필수 */
+                margin-right: 5px !important;
+                /* 우측 버튼들과의 최소 간격 */
             }
 
-            /* 메인 단어 (한자/영어) */
+            /* 단어 (메인 텍스트) */
             .word-row-main {
-                flex-direction: row;
-                align-items: baseline;
-                font-size: 0.9rem !important;
-                line-height: 1.2;
+                font-size: 1rem !important;
+                /* 폰트 사이즈 축소 (1.15 -> 1.0) */
                 flex-wrap: wrap;
-                gap: 4px;
+                /* 발음이 길면 줄바꿈 허용 */
             }
 
-            /* 발음 */
+            /* 발음 기호 */
             .word-pron {
-                font-size: 0.75rem !important;
-                margin-left: 2px !important;
-            }
-
-            /* 뜻 */
-            .word-row-sub {
-                font-size: 0.75rem !important;
-                margin-top: 1px !important;
-                white-space: nowrap !important;
-                /* 줄바꿈 금지 */
-                overflow: hidden;
-                text-overflow: ellipsis;
-                /* 말줄임표(...) */
-            }
-
-            /* 3. 우측 아이콘 버튼 영역 */
-            .icon-actions {
-                gap: 4px !important;
-                flex-shrink: 0;
-                /* 버튼 영역 줄어들지 않게 */
-                margin-left: 2px;
-            }
-
-            .icon-btn {
-                width: 28px !important;
-                height: 28px !important;
                 font-size: 0.8rem !important;
             }
 
-            .dict-btn {
-                padding: 4px 8px !important;
-                font-size: 0.7rem !important;
-                border-radius: 12px;
+            /* 뜻 (서브 텍스트) */
+            .word-row-sub {
+                font-size: 0.9rem !important;
+                margin-top: 2px !important;
             }
 
+
+            /* [우측] 버튼 영역 (사전, 퀴즈) */
+            .icon-actions {
+                flex: 0 0 auto;
+                /* 크기 고정 */
+                gap: 5px !important;
+                /* 버튼 사이 간격 좁힘 */
+            }
+
+            /* 원형 버튼들 (스피커, 퀴즈시작) 크기 축소 */
+            .icon-btn,
             .quiz-start-btn {
                 width: 28px !important;
                 height: 28px !important;
                 font-size: 0.75rem !important;
+                padding-left: 5px !important;
                 margin: 0 !important;
+                /* 아이콘 크기 조절 */
+            }
 
-                /* 정중앙 정렬 초기화 */
+            .quiz-start-btn {
+
                 padding: 0 !important;
                 padding-left: 2px !important;
                 /* 화살표 시각적 중앙 보정 (살짝 오른쪽으로) */
@@ -1319,31 +1412,14 @@
                 justify-content: center;
             }
 
-            /* 기존 텍스트(▶)가 있다면 중복되므로 폰트설정만 유지 */
-
-            /* 헤더 관련 (기존 유지) */
-            .main-title {
-                white-space: normal;
-                word-break: keep-all;
-                font-size: 1.3rem;
-            }
-
-            .stats-dashboard {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .stat-divider {
-                display: none;
-            }
-
-            .fixed-header-layer.shrunk .header-subtitle {
-                display: none !important;
-            }
-
-            .header-subtitle {
+            /* 사전 버튼 (네이버) */
+            .dict-btn {
+                padding: 4px 10px !important;
                 font-size: 0.75rem !important;
-                margin-bottom: 2px;
+                height: 24px !important;
+                /* 높이 명시 */
+                line-height: 14px !important;
+                /* 텍스트 수직 정렬 */
             }
         }
 
@@ -1359,6 +1435,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
         }
 
         .drag-handle:active {
@@ -1584,14 +1663,15 @@
             border-radius: 20px;
             cursor: pointer;
             transition: 0.2s;
+            box-shadow: 0 4px 6px rgba(86, 25, 47, 0.2);
         }
 
         .manage-btn.active {
             background: transparent;
-            border: 3px solid var(--glass-border);
+            border: 2px solid var(--glass-border);
             color: var(--accent);
             border-color: var(--accent);
-
+            box-shadow: 0 4px 10px rgba(86, 25, 47, 0.3);
             font-weight: 900;
         }
 
@@ -1609,6 +1689,13 @@
 
         .word-item:first-child {
             border-radius: 16px 16px 0 0;
+        }
+
+        .word-item>div:first-child {
+            flex: 0 0 32px !important;
+            width: 32px !important;
+            max-width: 32px !important;
+            margin-right: 5px !important;
         }
 
         .word-item:last-child {
@@ -1661,7 +1748,8 @@
         }
 
         .word-item>div:first-child {
-            width: 30px !important;
+            width: 40px !important;
+            height: 40px !important;
             margin-right: 5px !important;
             /* 간격 살짝 조정 */
             display: flex;
@@ -2542,7 +2630,7 @@
         }
 
         .app-logo {
-            height: 260px;
+            height: 270px;
             /* 상단 로고 기본 높이 */
             width: auto;
             object-fit: contain;
@@ -2551,7 +2639,7 @@
 
         /* 설정창 하단 앱 정보 카드용 큰 로고 */
         .app-logo.large {
-            height: 260px;
+            height: 270px;
             margin-bottom: 10px;
         }
 
@@ -2662,7 +2750,157 @@
                 /* 기존 20px + 30px = 50px */
             }
         }
+
+        html,
+        body {
+            touch-action: pan-x pan-y;
+            /* 스크롤은 허용하되, 확대/축소 제스처(pinch) 차단 */
+            overscroll-behavior: none;
+            /* 맥락없는 바운스 방지 */
+        }
+
+        /* [수정 1] 필터 버튼 그룹 */
+        .filter-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            /* 둥글게 */
+            padding: 6px 14px;
+            /* 좌우 여백 확보 */
+            cursor: pointer;
+            font-size: 0.85rem;
+            /* 텍스트 크기 */
+            color: var(--text-dim);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            /* 줄바꿈 방지 */
+        }
+
+        .filter-icon-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(255, 143, 205, 0.4);
+        }
+
+        /* [수정 2] 별표 안의 숫자 디자인 */
+        .star-index-wrapper {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: -5px;
+        }
+
+        .star-icon-img {
+            width: 100%;
+            /* 부모(50px) 대비 크기 조절 */
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.2s;
+            /* 기본(활성) 상태: 원본 색상(노랑 가정) 유지 */
+            filter: none;
+        }
+
+        .star-index-wrapper.active .star-svg {
+            fill: #FFD700;
+            /* 활성: 금색 */
+            filter: drop-shadow(0 2px 3px rgba(203, 177, 152, 0.2));
+        }
+
+        /* 비활성 상태: 회색조로 변경하고 투명도 적용 */
+        .star-index-wrapper:not(.active) .star-icon-img {
+            filter: grayscale(100%) opacity(0.1);
+        }
+
+        /* 활성 상태: 그림자 효과 */
+        .star-index-wrapper.active .star-icon-img {
+            /* 검정색 -> 금색(#FFD700)으로 바꾸는 매직 필터 */
+            filter: invert(86%) sepia(31%) saturate(5793%) hue-rotate(359deg) brightness(102%) contrast(106%) drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5)) !important;
+
+            transform: scale(1.1);
+            /* 약간 커지는 효과 */
+            opacity: 1;
+        }
+
+        .star-number {
+            position: absolute;
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: var(--text-dim);
+            z-index: 2;
+            pointer-events: none;
+            /* 클릭 통과 */
+            line-height: 1;
+        }
+
+        .star-index-wrapper.active .star-number {
+            color: #635300 !important;
+            /* 진한 금색/갈색 텍스트 */
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-icon-btn.btn-fav {
+            border: 1px solid #FFD700 !important;
+            color: #FFD700 !important;
+            background: rgba(255, 239, 11, 0.1) !important;
+
+            /* 너비/높이를 고정하여 원형 유지 */
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            /* 모바일 flex 축소 방지 */
+
+            border-radius: 50%;
+            /* 완전한 원형 */
+            padding: 0;
+            /* 내부 여백 제거하여 아이콘 중앙 정렬 */
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            /* 줄어들지 않음 */
+
+            font-size: 1.2rem;
+            /* 별 아이콘 크기 적절히 */
+        }
+
+
+        .filter-icon-btn.btn-fav.active {
+            background: #FFD700 !important;
+            color: #333 !important;
+            /* 활성화 시 글자색 */
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
+
+        /* 헤더 내부 툴바 스타일 보완 */
+        .glass-toolbar {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* 라이트 모드 대응 */
+        body.light-mode .glass-toolbar {
+            background: rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
     </style>
+
+
 </head>
 
 <body class="dark-mode">
@@ -3080,7 +3318,7 @@
 
             <!-- 정오답 피드백 오버레이 -->
             <div id="q-feedback"
-                style="position:absolute; bottom:0; left:0; width:100%; background:rgba(20,20,30,0.95); backdrop-filter:blur(10px); padding:20px; border-radius:20px 20px 0 0; border-top:1px solid var(--glass-border); display:none; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                style="position:absolute; bottom:0; left:0; width:100%; background:rgba(20,20,30,0.95); backdrop-filter:blur(10px); padding:20px; border-radius:40px 40px 40px 40px; border-top:1px solid var(--glass-border); display:none; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                 <h2 id="fb-title" style="margin:0 0 10px 0; font-size:1.5rem;">Result</h2>
                 <div id="fb-detail" style="font-size:1rem; line-height:1.5; color:var(--text-dim); margin-bottom:20px;">
                     Detail</div>
@@ -3176,6 +3414,9 @@
                 setup_theme_desc: "눈이 편안한 모드를 선택하세요.",
                 preview: "미리보기",
                 finish_setup: "설정 완료",
+                filter_fav: "즐겨찾기",
+                filter_weak: "취약 단어",
+                filter_last: "직전 오답",
                 dashboard: "대시보드",
                 show_all: "더보기",
                 language: "언어",
@@ -3321,6 +3562,9 @@
                 days_ago: "{n} days ago",
                 click_analyze: "Click to Analyze >",
                 my_vocas: "My Vocabularies 📂",
+                filter_fav: "Favorites",
+                filter_weak: "Weak Words",
+                filter_last: "Last Wrong",
                 smart_group: "Smart Group (Auto)",
                 smart_last_wrong: "Last Wrong",
                 delete: "Delete",
@@ -3457,6 +3701,9 @@
                 update_checked: "アップデートを確認しました。\n新しいバージョンがあれば通知されます。",
                 update_fail: "確認に失敗しました。オフラインかエラーが発生しました。",
                 sw_unsupported: "このブラウザはアプリの更新をサポートしていません。",
+                filter_fav: "お気に入り",
+                filter_weak: "苦手単語",
+                filter_last: "直前の誤答",
                 grp_name: "単語帳名",
                 grp_desc: "説明 (任意)",
                 create: "作成",
@@ -3564,6 +3811,9 @@
                 today: "今天",
                 days_ago: "{n}天前",
                 click_analyze: "点击分析 >",
+                filter_fav: "收藏",
+                filter_weak: "弱项单词",
+                filter_last: "上次错题",
                 my_vocas: "我的词汇本 📂",
                 smart_group: "智能分组 (Auto)",
                 smart_last_wrong: "上次错题",
@@ -3689,6 +3939,9 @@
                 click_analyze: "Analizar >",
                 my_vocas: "Mis Vocabularios 📂",
                 delete: "Eliminar",
+                filter_fav: "Favoritos",
+                filter_weak: "Palabras débiles",
+                filter_last: "Último error",
                 smart_group: "Grupo Inteligente",
                 smart_last_wrong: "Último Error",
                 smart_freq_wrong: "Frecuente (3+)",
@@ -3863,6 +4116,58 @@
         let currentSmartView = null; // { mode: 'tag'|'wrong_last'|'wrong_freq', value: '...' }
         let isGroupManageMode = false;
 
+        let currentWordFilter = 'all'; // all, fav, weak, wrong_last
+
+        function setWordFilter(filterType) {
+            if (currentWordFilter === filterType) currentWordFilter = 'all';
+            else currentWordFilter = filterType;
+
+            if (currentGroupId && !currentSmartView) {
+                const g = appData.groups.find(grp => grp.id === currentGroupId);
+                if (g) renderGroupDetail(document.getElementById('main-view-area'), g.langId, currentGroupId);
+            }
+        }
+
+        // [오류 해결] updateStarUI 함수를 toggleFavorite와 함께 전역 범위에 선언
+        function updateStarUI(wordId, isFav) {
+            // 1. 리스트의 별 업데이트
+            const starWrapper = document.getElementById(`star-btn-${wordId}`);
+            if (starWrapper) {
+                if (isFav) starWrapper.classList.add('active');
+                else starWrapper.classList.remove('active');
+            }
+            // 2. 상세 모달 내 버튼 업데이트
+            const modalBtn = document.getElementById('btn-modal-fav');
+            if (modalBtn) {
+                if (isFav) {
+                    modalBtn.style.color = '#FFD700';
+                    modalBtn.style.backgroundColor = 'rgba(255, 239, 11,0.1)';
+                    modalBtn.style.borderColor = '#FFD700';
+                    modalBtn.innerText = '★';
+                } else {
+                    modalBtn.style.color = 'var(--text-dim)';
+                    modalBtn.style.backgroundColor = 'rgba(255, 255, 255,0)';
+                    modalBtn.style.borderColor = 'var(--glass-border)';
+                    modalBtn.innerText = '☆';
+                }
+            }
+        }
+
+        function toggleFavorite(wordId, event) {
+            if (event) event.stopPropagation(); // 클릭 이벤트 전파 방지
+            const idNum = Number(wordId);
+            const word = appData.words.find(w => w.id === idNum);
+
+            if (word) {
+                // 기존 값 반전 (undefined일 경우 true로)
+                word.isFav = !word.isFav;
+                saveData();
+
+                // UI 즉시 갱신
+                updateStarUI(idNum, word.isFav);
+            }
+        }
+
         // --- Initialization ---
         // --- Initialization ---
         window.onload = () => {
@@ -3897,9 +4202,10 @@
             // 2. 퀴즈 화면이 켜져있다면 닫기
             const quizScreen = document.getElementById('quiz-screen');
             if (quizScreen && quizScreen.style.display === 'flex') {
-                quizScreen.style.display = 'none';
+                saveQuizProgress(); // <--- 저장 함수 호출 추가
                 quizSession.active = false;
-                // 퀴즈 종료 로직은 필요시 exitQuiz 내부 로직 참조하되 UI만 닫음
+
+                quizScreen.style.display = 'none';
                 renderApp();
                 return;
             }
@@ -4957,67 +5263,63 @@
 
 
 
-        /* --- [JS 수정] renderGroupDetail (변수 누락 수정 완료) --- */
+        /* [수정] renderGroupDetail: 필터 및 별표 기능 적용 */
         function renderGroupDetail(container, langId, groupId) {
             container.classList.add('no-scroll');
 
-            // [수정] FAB 버튼 이벤트 연결
+            // ... (기존 FAB 및 버튼 초기화 코드는 그대로 유지) ...
             const fabWrapper = document.getElementById('main-fab-wrapper');
             updateFabState('expanded');
             const addBtn = document.getElementById('fab-add-btn');
-
             fabWrapper.style.transform = 'translateY(0)';
             fabWrapper.style.opacity = '1';
-
-            // 그룹 내부에서는 '단어 추가' 기능
             addBtn.onclick = () => openAddWordModal();
 
             const group = appData.groups.find(g => g.id === groupId);
-            if (!group) {
-                currentGroupId = null;
-                return renderLanguageView(container, langId);
+            if (!group) return;
+
+            let wordsInGroup = appData.words.filter(w => w.groupId === groupId);
+
+            // [수정 1] 필터링 적용 (화면 표시용 displayList만 필터링)
+            let displayList = [...wordsInGroup];
+
+            if (currentWordFilter === 'fav') {
+                displayList = displayList.filter(w => w.isFav);
+            } else if (currentWordFilter === 'weak') {
+                displayList = displayList.filter(w => (w.stats?.wrong || 0) >= 3);
+            } else if (currentWordFilter === 'wrong_last') {
+                displayList = displayList.filter(w => w.stats?.lastResult === 'wrong');
             }
 
-            const wordsInGroup = appData.words.filter(w => w.groupId === groupId);
-            const displayList = [...wordsInGroup];
+            // ... (기존 통계 계산 변수들, dateCreated 등은 그대로 유지) ...
             const langInfo = SUPPORTED_LANGS[getCodeByLangId(langId)];
-
-            // 통계 계산
-            let stats = { total: displayList.length, tries: 0, wrong: 0, acc: 0 };
-            if (displayList.length > 0) {
-                const triesArr = displayList.map(w => w.stats ? w.stats.total : 0);
+            // 통계는 전체 단어 기준이어야 정확하므로 wordsInGroup 사용
+            let stats = { total: wordsInGroup.length, tries: 0, wrong: 0, acc: 0 };
+            if (wordsInGroup.length > 0) { /* ...기존 통계 계산 로직 유지... */
+                // (여기에 기존 통계 코드 그대로)
+                const triesArr = wordsInGroup.map(w => w.stats ? w.stats.total : 0);
                 stats.tries = Math.min(...triesArr);
                 let sT = 0, sW = 0;
-                displayList.forEach(w => {
-                    if (w.stats) {
-                        sT += w.stats.total;
-                        if ((w.stats.wrong || 0) >= 3) stats.wrong++;
-                        sW += w.stats.wrong || 0;
-                    }
+                wordsInGroup.forEach(w => {
+                    if (w.stats) { sT += w.stats.total; if ((w.stats.wrong || 0) >= 3) stats.wrong++; sW += w.stats.wrong || 0; }
                 });
                 if (sT > 0) stats.acc = Math.round(((sT - sW) / sT) * 100);
             }
 
-            const fmtDate = (ts) => {
-                if (!ts) return '-';
-                const d = new Date(ts);
-                return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
-            };
-
+            const fmtDate = (ts) => { if (!ts) return '-'; const d = new Date(ts); return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`; };
             const dateCreated = fmtDate(group.createdAt);
-
-            // [버그 수정] 누락되었던 변수 정의 복구
             const dateQuiz = group.lastQuizDate ? fmtDate(group.lastQuizDate) : '-';
             const dateMod = group.modifiedAt ? fmtDate(group.modifiedAt) : dateCreated;
-
             const manageBtnText = isManageMode ? t('done') : t('manage');
             const manageBtnClass = isManageMode ? "manage-btn active" : "manage-btn";
 
+            // Play All 버튼은 전체 리스트 대상
             let startBtnHTML = '';
-            if (displayList.length > 0 && !isManageMode) {
+            if (wordsInGroup.length > 0 && !isManageMode) {
                 startBtnHTML = `<button onclick="startQuizFromIndex('${groupId}', 0)" class="play-all-btn">▶ Play All</button>`;
             }
 
+            // --- HTML 생성 시작 ---
             let html = `
     <div id="sticky-header" class="fixed-header-layer">
         <div class="header-card-inner layout-container">
@@ -5026,19 +5328,34 @@
                 <div class="header-title-area" style="text-align:left;">
                      <div class="header-subtitle" style="font-size:0.8rem; color:var(--accent);">${langInfo.name} | ${dateCreated}</div>
                      <div class="main-title" style="font-size:1.4rem;">
-                        ${group.title}
-                        <button class="title-edit-btn" onclick="editGroupTitle('${groupId}')">✎</button>
+                        ${group.title} <button class="title-edit-btn" onclick="editGroupTitle('${groupId}')">✎</button>
                      </div>
                 </div>
                 ${startBtnHTML}
             </div>
 
+             <!-- [추가] 헤더 내에 고정된 필터/관리 툴바 (리퀴드 스타일) -->
+            <div class="glass-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding: 10px; background:rgba(255,255,255,0.05); border-radius:12px; border:1px solid var(--glass-border); backdrop-filter:blur(5px);">
+                <div class="filter-group">
+                    <button class="filter-icon-btn btn-fav ${currentWordFilter === 'fav' ? 'active' : ''}" 
+                            onclick="setWordFilter('fav')">★</button>
+                    
+                    <button class="filter-icon-btn ${currentWordFilter === 'weak' ? 'active' : ''}" 
+                            onclick="setWordFilter('weak')">${t('filter_weak')}</button>
+                    
+                    <button class="filter-icon-btn ${currentWordFilter === 'wrong_last' ? 'active' : ''}" 
+                            onclick="setWordFilter('wrong_last')">${t('filter_last')}</button>
+                </div>
+                <button onclick="toggleManageMode()" class="${manageBtnClass}" style="flex-shrink:0;">${manageBtnText}</button>
+            </div>
+            
+            <!-- (통계 패널 HTML 기존 유지) -->
             <div class="stats-wrapper" style="margin-bottom:0;">
                 <div class="stats-dashboard" style="border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:none;">
                     <div class="stat-item"><span class="stat-label">${t('total_words')}</span><span class="stat-value" style="font-size:1.2rem;">${stats.total}</span></div>
                     <div class="stat-item"><span class="stat-label">${t('exam_count')}</span><span class="stat-value" style="font-size:1.2rem; color:var(--text-main);">${stats.tries}</span></div>
                     <div class="stat-item"><span class="stat-label">${t('accuracy')}</span><span class="stat-value" style="font-size:1.2rem; color:#4CAF50;">${stats.acc}%</span></div>
-                    <div class="stat-item"><span class="stat-label">Weak</span><span class="stat-value" style="font-size:1.2rem; color:var(--danger);">${stats.wrong}</span></div>
+                    <div class="stat-item"><span class="stat-label">${t('stat_weak')}</span><span class="stat-value" style="font-size:1.2rem; color:var(--danger);">${stats.wrong}</span></div>
                 </div>
                 <div style="display:flex; justify-content:space-around; align-items:center; background:rgba(0,0,0,0.03); border:1px solid var(--glass-border); border-top:none; border-radius:0 0 12px 12px; padding:8px 5px;">
                     <div style="display:flex; flex-direction:column; align-items:center;">
@@ -5051,7 +5368,6 @@
                         <span style="color:var(--text-main); font-weight:600; font-size:0.9rem;">${dateMod}</span>
                     </div>
                 </div>
-                
                 <button onclick="openGroupStatsModal('${groupId}')" 
                         style="width:100%; margin-top:0; padding:10px; background:var(--glass-bg); border:1px solid var(--glass-border); border-top:none; border-radius:0 0 12px 12px; color:var(--text-main); font-size:0.9rem; font-weight:600; cursor:pointer;">
                     ${t('click_analyze')}
@@ -5061,48 +5377,65 @@
     </div>
 
     <div id="scroll-area" class="scroll-content-area">
-        <div id="header-spacer" style="width:100%; height:280px;"></div> 
+        <div id="header-spacer" style="width:100%; height:340px;"></div> 
 
         <div id="word-items-list" class="layout-container" style="padding-bottom:100px;">
-            <div class="list-toolbar">
-                <button onclick="toggleManageMode()" class="${manageBtnClass}">${manageBtnText}</button>
-            </div>
+            
+            
     `;
 
             if (displayList.length === 0) {
-                html += `<p style="text-align:center; padding:50px; opacity:0.5;">${t('empty_word')}</p>`;
+                html += `<p style="text-align:center; padding:50px; opacity:0.5;">${t('no_matching_word')}</p>`;
             } else {
                 const itemClass = isManageMode ? "managing" : "";
 
                 displayList.forEach((w, idx) => {
                     const ttsCode = getCodeByLangId(langId);
-                    const listNum = idx + 1;
+                    const ttsText = ((ttsCode === 'ja' || ttsCode === 'zh') && w.pron) ? w.pron : w.term;
 
+                    const listNum = idx + 1;
+                    const isFavClass = w.isFav ? 'active' : '';
+
+                    /* [수정] HTML 구조 재정립 (div 닫힘 확인 필수) */
                     html += `
              <div class="word-item ${itemClass}" id="${w.id}" data-index="${idx}" data-type="word" 
-                  style="border-radius:15px; margin-bottom:10px; border:1px solid var(--glass-border); display:flex; align-items:center; padding: 15px;">
+                  ondragover="dragOver(event)" ondrop="dropItem(event)"
+                  style="border-radius:15px; margin-bottom:10px; border:1px solid var(--glass-border); display:flex; align-items:center; padding: 15px; position: relative;">
                  
-                 <div style="width:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                 <!-- 좌측 영역: 별표/순번 또는 드래그 핸들 -->
+                 <!-- .item-left-col 클래스 사용 (CSS로 제어됨) -->
+                 <div class="item-left-col">
                     ${isManageMode
-                            ? `<div class="drag-handle" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropItem(event)" ontouchstart="touchStart(event)" ontouchmove="touchMove(event)" ontouchend="touchEnd(event)">≡</div>`
-                            : `<div class="item-number" style="font-size:1rem; color:var(--text-dim);">${listNum}</div>`
+                            ? `<div class="drag-handle" 
+                                    draggable="true" 
+                                    ondragstart="dragStart(event)" 
+                                    ontouchstart="touchStart(event)" 
+                                    ontouchmove="touchMove(event)" 
+                                    ontouchend="touchEnd(event)">≡</div>`
+                            : `<div class="star-index-wrapper ${isFavClass}" id="star-btn-${w.id}" onclick="toggleFavorite(${w.id}, event)">
+                                   <img src="./Asset/favorite.svg" class="star-icon-img" alt="fav">
+                                   <span class="star-number">${listNum}</span>
+                               </div>`
                         }
                  </div>
 
-                 <div class="word-content" onclick="openWordDetail(${w.id})" style="flex:1; margin-left:5px; cursor:pointer;">
-                     <div class="word-row-main" style="color:var(--text-main); font-weight:600; line-height:1.2;">
-                        ${w.term} <span class="word-pron" style="font-weight:normal; color:var(--accent); margin-left:5px;">${w.pron || ''}</span>
+                 <!-- 단어 텍스트 영역 -->
+                 <div class="word-content" onclick="openWordDetail(${w.id})" style="flex:1; min-width:0; cursor:pointer;">
+                     <div class="word-row-main" style="color:var(--text-main); font-weight:600; font-size:1.15rem; line-height:1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${w.term} <span class="word-pron" style="font-weight:normal; color:var(--accent); font-size:0.85rem; margin-left:5px;">${w.pron || ''}</span>
                      </div>
-                     <div class="word-row-sub" style="opacity:0.8; margin-top:2px;">${w.mean}</div>
+                     <div class="word-row-sub" style="opacity:0.8; margin-top:2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${w.mean}</div>
                  </div>
                  
-                 <div class="icon-actions" style="display:flex; gap:10px;">
+                 <!-- 우측 버튼 영역 -->
+                 <div class="icon-actions" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
                     ${isManageMode
                             ? `<button class="btn-icon-text" style="font-size:1.2rem; padding:5px;" onclick="editWord(${w.id})">✎</button>
-                       <button class="delete-btn-x" onclick="deleteWord(${w.id})">✕</button>`
-                            : `<button class="icon-btn play-sound" onclick="speak('${w.term}','${ttsCode}')">🔊</button>
-                       <button class="dict-btn" onclick="openDictWindow('${w.term}','${ttsCode}')">${t('dict_search')}</button>
-                       <button class="quiz-start-btn" onclick="startQuizFromIndex('${groupId}', ${idx})" title="${t('quiz_start_idx')}">▶</button>`
+                               <button class="delete-btn-x" onclick="deleteWord(${w.id})">✕</button>`
+                            : `
+                               <button class="icon-btn play-sound" onclick="speak('${ttsText}','${ttsCode}')">🔊</button>
+                               <button class="dict-btn" onclick="openDictWindow('${w.term}','${ttsCode}')">${t('dict_search')}</button>
+                               <button class="quiz-start-btn" onclick="startQuizFromIndex('${groupId}', ${idx})" title="${t('quiz_start_idx')}">▶</button>`
                         }
                  </div>
              </div>`;
@@ -5167,10 +5500,17 @@
         <div class="glass-card vocab-card" 
              style="margin-bottom:12px; cursor:${cursorStyle}; display:flex; align-items:center; padding: 15px;"
              onclick="${isGroupManageMode ? '' : `enterGroup('${g.id}')`}"
-             data-index="${idx}" data-type="group">
+             data-index="${idx}" data-type="group"
+             ondragover="dragOver(event)" ondrop="dropItem(event)">
              
              ${isGroupManageMode
-                        ? `<div class="drag-handle" style="margin-right:15px;" draggable="true" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropItem(event)" ontouchstart="touchStart(event)" ontouchmove="touchMove(event)" ontouchend="touchEnd(event)">≡</div>`
+                        ? `<div class="drag-handle" 
+                                style="margin-right:15px; padding:10px;" 
+                                draggable="true" 
+                                ondragstart="dragStart(event)" 
+                                ontouchstart="touchStart(event)" 
+                                ontouchmove="touchMove(event)" 
+                                ontouchend="touchEnd(event)">≡</div>`
                         : ``
                     }
 
@@ -5422,8 +5762,11 @@
 
         function toggleManageMode() {
             isManageMode = !isManageMode;
-            renderApp(); // 리렌더링해서 UI 반영
-
+            // 관리 모드 진입 시, 필터를 '전체(all)'로 강제하여 드래그 순서 오류 방지
+            if (isManageMode) {
+                currentWordFilter = 'all';
+            }
+            renderApp();
         }
 
         // [핵심] 단어 순서 이동 (Swap Logic)
@@ -5576,6 +5919,7 @@
             } else {
                 displayList.forEach((w, idx) => {
                     const ttsCode = getCodeByLangId(langId);
+                    const ttsText = ((ttsCode === 'ja' || ttsCode === 'zh') && w.pron) ? w.pron : w.term;
                     const listNum = idx + 1;
 
                     html += `
@@ -5592,7 +5936,7 @@
                  </div>
                  
                  <div class="icon-actions" style="display:flex; gap:10px;">
-                    <button class="icon-btn play-sound" onclick="speak('${w.term}','${ttsCode}')">🔊</button>
+                    <button class="icon-btn play-sound" onclick="speak('${ttsText}','${ttsCode}')">🔊</button>
                     <button class="dict-btn" onclick="openDictWindow('${w.term}','${ttsCode}')">${t('dict_search')}</button>
                     <button class="quiz-start-btn" onclick="startQuizFromSmartGroup(${idx})" title="${t('quiz_start_idx')}">▶</button>
                  </div>
@@ -5773,18 +6117,25 @@
 
         /* --- [수정] 단어 상세 보기 모달 (편집 버튼 작동 수정) --- */
         /* --- [수정] 단어 상세 보기 모달 (삭제 버튼 추가) --- */
+        /* [수정 3] 상세 모달: TTS, 즐겨찾기 버튼 추가 */
         function openWordDetail(wordId) {
-            // 1. 데이터 찾기
             const word = appData.words.find(w => w.id === Number(wordId));
             if (!word) return;
 
-            // 언어 코드 찾기
             const langCode = getCodeByLangId(word.langId);
 
-            // 2. 모달 패널 요소 가져오기
+            // TTS 텍스트 (발음 우선)
+            const ttsText = ((langCode === 'ja' || langCode === 'zh') && word.pron) ? word.pron : word.term;
+
+            // 즐겨찾기 상태
+            const isFav = word.isFav;
+            const favColor = isFav ? '#FFD700' : 'var(--text-dim)';
+            const favText = isFav ? '★' : '☆';
+            const favBorder = isFav ? '#FFD700' : 'var(--glass-border)';
+
             const modalPanel = document.querySelector('#modal-word-detail .modal-panel');
 
-            // 3. 태그 HTML 생성
+            // 태그 HTML 생성 (기존 유지)
             let tagHtml = '';
             if (word.tags && word.tags.length > 0) {
                 word.tags.forEach(t => {
@@ -5794,13 +6145,10 @@
                 tagHtml = `<span style="color:var(--text-dim); font-size:0.9rem;">-</span>`;
             }
 
-            // 4. HTML 렌더링 
-            // [수정사항] 하단 버튼 영역에 '삭제' 버튼을 추가했습니다.
             modalPanel.innerHTML = `
         <div class="modal-sticky-header">
             <button onclick="closeModal('modal-word-detail')" class="back-icon-btn" style="border:none; background:none;">✕</button>
             <h3 style="margin:0; font-size:1.1rem;">${t('word_detail')}</h3>
-            <!-- 편집 버튼 -->
             <button class="title-edit-btn" onclick="transitionToEdit(${word.id})" style="font-size:1.1rem; opacity:1;">✎</button>
         </div>
         
@@ -5808,8 +6156,15 @@
             <div style="text-align:center; margin-bottom:20px;">
                 <h1 style="margin:0; font-size:2.2rem; word-break:break-all;">${word.term}</h1>
                 <div style="font-size:1.1rem; color:var(--accent); margin-top:5px;">${word.pron ? `[${word.pron}]` : ''}</div>
+                
+                <!-- [추가] 상세 화면 내 TTS 버튼 -->
+                <button onclick="speak('${ttsText}', '${langCode}')" 
+                    style="margin-top:10px; background:rgba(255, 255, 255, 0.05); border:1px solid var(--glass-border); border-radius:50%; width:44px; height:44px; font-size:1.2rem; cursor:pointer; color:var(--text-main);">
+                    🔊
+                </button>
             </div>
 
+            <!-- (기존 상세 정보 카드들 유지) -->
             <div class="glass-card" style="margin-bottom:15px; padding:15px;">
                 <span class="input-label">${t('mean')}</span>
                 <div style="font-size:1.2rem; font-weight:600; color:var(--text-main);">${word.mean}</div>
@@ -5831,16 +6186,20 @@
                     ${t('dict_search')}
                 </button>
                 
-            </div>
-            <!-- [신규] 삭제 버튼 -->
-                <button onclick="deleteWordFromDetail(${word.id})" class="glass-btn" style="flex:1; margin-top:20px; color:var(--danger); border:1px solid var(--danger); background:rgba(255, 85, 119, 0.05);">
-                    ${t('delete')}
+                <!-- [추가] 즐겨찾기 버튼 -->
+                <button id="btn-modal-fav" onclick="toggleFavorite(${word.id})" class="glass-btn" 
+                        style="flex:1; font-size:1.5rem; padding:0; color:${favColor}; border-color:${favBorder};">
+                    ${favText}
                 </button>
+            </div>
+            
+            <button onclick="deleteWordFromDetail(${word.id})" class="glass-btn" style="flex:1; margin-top:20px; color:var(--danger); border:1px solid var(--danger); background:rgba(255, 85, 119, 0.05);">
+                ${t('delete')}
+            </button>
             <div class="modal-footer-gap"></div>
         </div>
     `;
 
-            // 5. 모달 열기
             openModalWithAnim('modal-word-detail');
         }
 
@@ -6325,45 +6684,53 @@
             showNextQuestion();
         }
 
-        // [5. 종료] 퀴즈 종료 및 진행 상황(이어하기 위치) 저장
-        // [퀴즈 종료] 진행 상황 저장 및 '마지막 퀴즈 날짜' 갱신
-        // [JS 수정] 퀴즈 종료 시 '시험 결과 히스토리(점수 등)'를 저장하도록 추가
-        function exitQuiz() {
-            // 퀴즈 화면 닫기도 뒤로가기 (onpopstate에서 처리됨)
-            // 단, 데이터 저장은 해야하므로 저장 로직은 유지하고 화면 전환만 위임
-
-            // --- (기존 데이터 저장/계산 로직 유지) ---
+        /* [수정 3-1] 퀴즈 진행상황 저장 로직 분리 (뒤로가기 대응) */
+        function saveQuizProgress() {
             if (quizSession.active && quizSession.targetGroupId && !quizSession.isRandom) {
                 const group = appData.groups.find(g => String(g.id) === String(quizSession.targetGroupId));
                 if (group) {
                     group.lastQuizDate = Date.now();
-                    // ... (기존 점수 계산 및 저장 코드 그대로 유지) ...
+
+                    // 점수 및 히스토리 기록 (기존 로직 유지)
                     const totalQ = quizSession.queue.length;
-                    if (totalQ > 0 && quizSession.cursor >= totalQ) {
-                        const score = Math.round((quizSession.correctCnt / totalQ) * 100);
-                        const wrongIds = quizSession.queue
-                            .filter(w => w.stats && w.stats.lastResult === 'wrong')
-                            .map(w => w.id);
-                        if (!group.quizHistory) group.quizHistory = [];
-                        group.quizHistory.push({ date: Date.now(), score: score, wrongWords: wrongIds });
-                        if (group.quizHistory.length > 50) group.quizHistory.shift();
+                    // 한 문제라도 풀었거나 퀴즈가 끝났을 때 기록
+                    if (totalQ > 0) {
+                        // 퀴즈 종료 여부와 상관없이 현재까지의 정답률 계산 등은 선택사항이나
+                        // 여기서는 퀴즈가 끝까지 갔을 때만 히스토리에 남기는 기존 로직 유지
+                        if (quizSession.cursor >= totalQ) {
+                            const score = Math.round((quizSession.correctCnt / totalQ) * 100);
+                            const wrongIds = quizSession.queue
+                                .filter(w => w.stats && w.stats.lastResult === 'wrong')
+                                .map(w => w.id);
+                            if (!group.quizHistory) group.quizHistory = [];
+                            group.quizHistory.push({ date: Date.now(), score: score, wrongWords: wrongIds });
+                            if (group.quizHistory.length > 50) group.quizHistory.shift();
+                        }
                     }
+
+                    // [핵심] 이어하기를 위한 인덱스 저장
+                    // 현재 커서 위치 + 시작 위치
                     const nextIndex = (quizSession.absoluteStartIndex || 0) + quizSession.cursor;
                     const wordsInGroup = appData.words.filter(w => String(w.groupId) === String(group.id));
+
+                    // 끝까지 다 풀었으면 저장 인덱스를 전체 길이로(완료), 아니면 현재 위치 저장
                     if (nextIndex >= wordsInGroup.length) group.lastStopIndex = wordsInGroup.length;
                     else group.lastStopIndex = nextIndex;
+
                     saveData();
                 }
             } else if (quizSession.active && quizSession.targetGroupId && quizSession.isRandom) {
+                // 랜덤 모드여도 날짜는 갱신
                 const group = appData.groups.find(g => String(g.id) === String(quizSession.targetGroupId));
                 if (group) { group.lastQuizDate = Date.now(); saveData(); }
             }
-            // --- (여기까지 기존 로직) ---
+        }
 
-            // [수정] 화면 닫기는 뒤로가기로 처리
-            // 단, 퀴즈 모달이 떠있는 상태였다면 history.back()이 모달을 닫을 것이고,
-            // 전체화면 퀴즈창은 onpopstate에서 처리하도록 함
-            history.back();
+        // 기존 exitQuiz는 저장 함수 호출 후 뒤로가기 수행
+        function exitQuiz() {
+            saveQuizProgress(); // 저장 수행
+            quizSession.active = false; // 세션 종료
+            history.back(); // UI 닫기 (onpopstate 트리거)
         }
 
         // 6. UI 제어
@@ -6732,7 +7099,24 @@
             return Array.from(variations);
         }
 
+        /* [수정 2-1] 뜻 정규화 및 Prefix 추출 헬퍼 함수 추가 */
+        function getNormalizedMeaningPrefix(text, langCode) {
+            if (!text) return "";
+            // 1. 괄호 (...) 및 [...] 와 그 안의 내용 제거
+            let clean = text.replace(/\(.*?\)/g, '').replace(/\[.*?\]/g, '').trim();
 
+            // 2. 언어별 비교 길이 설정
+            // ko(한국어), zh(중국어): 3글자
+            // en(영어), es(스페인어): 5글자
+            // ja(일본어): 4글자
+            // 그 외: 4글자
+            let len = 4;
+            if (langCode === 'ko' || langCode === 'zh') len = 3;
+            else if (langCode === 'en' || langCode === 'es') len = 5;
+
+            // 공백 제거 후 소문자로 변환하여 앞글자 추출
+            return clean.replace(/\s+/g, '').toLowerCase().substring(0, len);
+        }
 
         // 4. 문제 렌더링
         /* --- [New] Helper for text normalization (removes parentheses, spaces for comparison) --- */
@@ -6810,7 +7194,10 @@
             ui.qText.innerText = questionText;
             ui.ttsBtn.style.display = (isTTSQuestion || quizSession.config.useTTS) ? 'inline-block' : 'none';
 
-            if (isTTSQuestion) speak(word.term, langCode);
+            if (isTTSQuestion) {
+                const textToSpeak = ((langCode === 'ja' || langCode === 'zh') && word.pron) ? word.pron : word.term;
+                speak(textToSpeak, langCode);
+            }
 
             // ============================================
             // [Core Logic] 4-Choice Selection
@@ -6833,31 +7220,41 @@
 
 
                 // 1. Initial Candidate Filtering
+                const correctPron = (word.pron || word.term).replace(/\s+/g, '').toLowerCase();
+                // 뜻이 담긴 언어(모국어)의 코드는 시스템 설정(appData.config.sysLang)을 따름
+                const sysLang = appData.config.sysLang || 'ko';
+                const correctMeanPrefix = getNormalizedMeaningPrefix(word.mean, sysLang);
+
                 const candidates = appData.words.filter(w => {
+                    // 기본 조건: 같은 언어여야 하고, 자기 자신은 제외
                     if (w.langId !== word.langId) return false;
                     if (w.id === word.id) return false;
 
-                    // Exclude words with exact same Kanji (prevent synoyms like 如何 vs 如何)
+                    // A. 단어(Term)가 완전히 같으면 배제 (동의어 등)
                     if (w.term.trim() === word.term.trim()) return false;
 
-                    // Get candidate's display text
-                    let wVal = (displayKey === 'mean') ? w.mean :
-                        (displayKey === 'pron_or_term') ? (w.pron || w.term) : w.term;
+                    // B. 발음(Pron)이 동일하면 배제 (예: 同音異義語 방지)
+                    const wPron = (w.pron || w.term).replace(/\s+/g, '').toLowerCase();
+                    if (wPron === correctPron) return false;
+
+                    // C. 뜻(Mean)이 유사하면 배제 (언어별 앞글자 비교)
+                    const wMeanPrefix = getNormalizedMeaningPrefix(w.mean, sysLang);
+                    // 접두어가 비어있지 않고 서로 같다면 배제 (너무 비슷한 뜻)
+                    if (correctMeanPrefix.length > 0 && wMeanPrefix === correctMeanPrefix) return false;
+
+                    // D. (기존 로직) 정답 텍스트가 후보군에 포함되거나 반대의 경우 배제
+                    let wVal = (displayKey === 'mean') ? w.mean : (displayKey === 'pron_or_term') ? (w.pron || w.term) : w.term;
                     wVal = wVal ? wVal.trim() : "";
 
-                    // Exact match & Containment check
                     if (wVal === correctDisplayVal) return false;
                     const cleanWVal = getCleanText(wVal);
                     if (cleanWVal === cleanCorrectVal) return false;
 
-                    // Check for containment to avoid "Apple" vs "Apple (Fruit)"
                     if (cleanCorrectVal.length > 1 && cleanWVal.length > 1) {
                         if (cleanWVal.includes(cleanCorrectVal) || cleanCorrectVal.includes(cleanWVal)) return false;
                     }
 
-                    // ★ [Strict Filter] For 'Term' quizzes (meaning -> Kanji),
-                    // if the correct answer has okurigana, candidates MUST have the same okurigana structure.
-                    // e.g. Ans: 飽くまで (~made) -> Cand: 御無沙汰 (X), 行くまで (O)
+                    // E. (기존 일본어 로직 유지) 정답이 오쿠리가나를 포함하면 후보도 동일해야 함
                     if (displayKey === 'term' && correctSuffix.length > 0) {
                         if (!w.term.trim().endsWith(correctSuffix)) return false;
                     }
@@ -6962,23 +7359,48 @@
 
                     const tryAddCandidate = (candidate, isRawData = true) => {
                         let val = "";
+                        // 후보의 원본 뜻(mean) 데이터가 필요함 (중복 검사용)
+                        let candidateMean = "";
+
                         if (isRawData) {
                             val = (displayKey === 'mean') ? candidate.mean :
                                 (displayKey === 'pron_or_term') ? (candidate.pron || candidate.term) : candidate.term;
+                            candidateMean = candidate.mean;
                         } else {
                             val = candidate;
+                            // RawData가 아닐 경우(가짜 생성 등), val 자체가 뜻일 수 있음
+                            if (displayKey === 'mean') candidateMean = candidate;
                         }
 
                         val = val ? val.trim() : "";
-                        if (!usedDisplayVals.has(val)) {
-                            selectedWords.push({
-                                id: isRawData ? candidate.id : `gen_${Math.random()}`,
-                                text: val
-                            });
-                            usedDisplayVals.add(val);
-                            return true;
+
+                        // [기존 1차 필터] 단순 텍스트 중복 확인
+                        if (usedDisplayVals.has(val)) return false;
+
+                        // [수정 2차 필터] 오답간 의미 중복 엄격 검사 (Issue 2 해결)
+                        // 문제 유형이 '뜻 고르기(sel_l2m, tts_dict)'일 때만 작동 (displayKey === 'mean')
+                        if (displayKey === 'mean') {
+                            const sysLang = appData.config.sysLang || 'ko';
+                            const currentPrefix = getNormalizedMeaningPrefix(val, sysLang);
+
+                            // 1. 정답과의 의미 중복 재확인 (방어 코드)
+                            if (currentPrefix === getNormalizedMeaningPrefix(word.mean, sysLang)) return false;
+
+                            // 2. 이미 선택된 오답(selectedWords)들과의 의미 중복 확인
+                            for (let added of selectedWords) {
+                                // added.text는 화면에 표시될 텍스트(뜻)임
+                                const addedPrefix = getNormalizedMeaningPrefix(added.text, sysLang);
+                                if (currentPrefix === addedPrefix) return false;
+                            }
                         }
-                        return false;
+
+                        // 통과되면 추가
+                        selectedWords.push({
+                            id: isRawData ? candidate.id : `gen_${Math.random()}`,
+                            text: val
+                        });
+                        usedDisplayVals.add(val);
+                        return true;
                     };
 
                     // 1. 유사도가 높은 단어 (구조가 같은 단어) 우선 채택
@@ -7159,7 +7581,13 @@
             // 퀴즈 진행중일 때 현재 단어 읽기
             if (quizSession.active && quizSession.queue.length > 0) {
                 const word = quizSession.queue[quizSession.cursor];
-                speak(word.term, getCodeByLangId(word.langId));
+                const langCode = getCodeByLangId(word.langId);
+
+                // 일본어('ja')나 중국어('zh')인 경우, word.pron(후리가나/병음)이 있으면 그것을 읽게 함
+                // 그 외 언어거나 발음 정보가 없으면 기존처럼 word.term을 읽음
+                const textToSpeak = ((langCode === 'ja' || langCode === 'zh') && word.pron) ? word.pron : word.term;
+
+                speak(textToSpeak, langCode);
             }
         }
 
@@ -7246,26 +7674,40 @@
             return false;
         }
 
-        // 4. 단어 순서 변경 (데이터)
+        /* [수정 2-1] 순서 변경 후 스크롤 위치 유지 */
         function reorderWordsData(fromIndex, toIndex) {
-            // 현재 화면에 보이는 리스트 (필터링된 것)
-            const currentList = appData.words.filter(w => w.groupId === currentGroupId);
+            const currentGroupWords = appData.words.filter(w => String(w.groupId) === String(currentGroupId));
+            if (!currentGroupWords[fromIndex] || !currentGroupWords[toIndex]) return;
 
-            // 배열 범위 체크
-            if (!currentList[fromIndex] || !currentList[toIndex]) return;
+            const sourceWord = currentGroupWords[fromIndex];
+            const targetWord = currentGroupWords[toIndex];
 
-            // 실제 appData.words 내의 인덱스 찾기
-            const realFromIdx = appData.words.indexOf(currentList[fromIndex]);
-            const realToIdx = appData.words.indexOf(currentList[toIndex]);
+            const realFromIdx = appData.words.findIndex(w => w.id === sourceWord.id);
+            const realToIdx = appData.words.findIndex(w => w.id === targetWord.id);
 
-            // 데이터 배열에서 이동
+            if (realFromIdx === -1 || realToIdx === -1) return;
+
+            // 현재 스크롤 위치 저장 (전역 window나 특정 컨테이너)
+            const scrollContainer = document.getElementById('scroll-area'); // scroll-area 사용
+            const currentScrollY = scrollContainer ? scrollContainer.scrollTop : 0;
+
             const [movedItem] = appData.words.splice(realFromIdx, 1);
             appData.words.splice(realToIdx, 0, movedItem);
 
             saveData();
-            // 해당 그룹 화면만 갱신
+
+            // 렌더링 호출
             renderGroupDetail(document.getElementById('main-view-area'), movedItem.langId, currentGroupId);
+
+            // 렌더링 직후 스크롤 복구
+            // DOM 업데이트 타이밍을 맞추기 위해 setTimeout 사용하지 않고 동기적으로 시도하거나, 
+            // 미세한 딜레이를 줄 수 있음. (보통은 렌더링 직후가 안전)
+            setTimeout(() => {
+                const container = document.getElementById('scroll-area');
+                if (container) container.scrollTop = currentScrollY;
+            }, 0);
         }
+
 
         // 5. 그룹 순서 변경 (데이터)
         function reorderGroupsData(fromIndex, toIndex) {
@@ -7312,6 +7754,9 @@
         function touchMove(e) {
             if (!touchDragItem) return;
             e.preventDefault(); // 드래그 중 스크롤 방지
+            if (e.cancelable) {
+                e.preventDefault();
+            }
             // 시각적 효과 추가 가능 (좌표 따라다니기 등)
         }
 
@@ -7319,19 +7764,29 @@
             if (!touchDragItem) return;
 
             const changedTouch = e.changedTouches[0];
+            // 손가락을 뗀 위치의 요소를 찾음
             const realTarget = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+
+            // 해당 요소가 리스트 아이템인지 확인 (핸들, 텍스트, 빈 공간 등 어디를 놓아도 찾도록 closest 사용)
             const targetItem = realTarget ? realTarget.closest('[data-index]') : null;
 
-            if (targetItem && targetItem !== touchDragItem && targetItem.dataset.type === dragType) {
-                const destIndex = Number(targetItem.dataset.index);
+            if (targetItem && targetItem !== touchDragItem) {
+                // 드래그 시작 타입과 드랍 타입이 같은지 확인
+                const currentDragType = touchDragItem.dataset.type;
+                const targetDragType = targetItem.dataset.type;
 
-                if (dragType === 'word') {
-                    reorderWordsData(dragSrcIndex, destIndex);
-                } else if (dragType === 'group') {
-                    reorderGroupsData(dragSrcIndex, destIndex);
+                if (currentDragType === targetDragType) {
+                    const destIndex = Number(targetItem.dataset.index);
+                    // dragSrcIndex는 전역 변수로 touchStart에서 설정됨
+                    if (currentDragType === 'word') {
+                        reorderWordsData(dragSrcIndex, destIndex);
+                    } else if (currentDragType === 'group') {
+                        reorderGroupsData(dragSrcIndex, destIndex);
+                    }
                 }
             }
 
+            // 초기화
             touchDragItem.classList.remove('dragging');
             touchDragItem = null;
         }
