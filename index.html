@@ -4188,6 +4188,13 @@
             // 1. 활성화된 모달이 있다면 닫기 (UI 처리만 수행)
             const activeModal = document.querySelector('.modal-overlay.active');
             if (activeModal) {
+
+                if (activeModal.id === 'setup-popup') {
+                    // 사용자가 뒤로가기를 눌러서 히스토리가 빠졌으므로, 
+                    // 다시 가짜 히스토리를 넣어 현재 상태를 유지시킴 (모달 안 닫힘)
+                    history.pushState({ level: 3, view: 'modal', modalId: 'setup-popup' }, null, '');
+                    return;
+                }
                 // history.back()을 호출하지 않고 직접 닫기만 수행 (이미 back 되어 state가 빠졌으므로)
                 activeModal.classList.add('closing');
                 activeModal.classList.remove('active');
@@ -7530,41 +7537,42 @@
 
             // 데이터 업데이트 (word stats)
             if (!wordObj.stats) wordObj.stats = { total: 0, wrong: 0, consecutiveCorrect: 0, lastResult: null, lastWrongType: null };
-
             wordObj.stats.total++;
             wordObj.stats.lastResult = isCorrect ? 'correct' : 'wrong';
 
             if (isCorrect) {
                 quizSession.correctCnt++;
                 wordObj.stats.consecutiveCorrect++;
-                // 맞으면 lastWrongType 제거 (이제 아는 단어니까)
                 wordObj.stats.lastWrongType = null;
-
-                // UI 표시
                 title.innerText = t('quiz_correct');
                 title.style.color = "#4CAF50";
             } else {
                 wordObj.stats.wrong++;
                 wordObj.stats.consecutiveCorrect = 0;
-                // 틀린 유형 기록
                 wordObj.stats.lastWrongType = quizSession.currentQType;
-
                 title.innerText = t('quiz_wrong');
                 title.style.color = "var(--danger)";
             }
             nextBtn.innerText = t('quiz_next');
-            saveData(); // 즉시 저장
+            saveData();
+
+            // ★ [여기 수정됨] 사전 검색 버튼 추가 ★
+            // 현재 단어의 언어 코드 가져오기
+            const langCode = getCodeByLangId(wordObj.langId);
 
             detail.innerHTML = `
-        <span style="font-size:1.5rem; font-weight:bold; color:var(--text-main);">${wordObj.term}</span><br>
-        ${wordObj.pron ? `<span style="color:var(--accent);">${wordObj.pron}</span><br>` : ''}
-        ${wordObj.mean}<br>
-        <span style="font-size:0.8rem; opacity:0.6;">${wordObj.memo || ''}</span>
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:5px;">
+            <span style="font-size:1.5rem; font-weight:bold; color:var(--text-main);">${wordObj.term}</span>
+            <!-- 사전 버튼 추가 -->
+            <button class="dict-btn" onclick="openDictWindow('${wordObj.term}', '${langCode}')" 
+                    style="font-size:0.8rem; padding:4px 10px;">${t('dict_search')}</button>
+        </div>
+        ${wordObj.pron ? `<span style="color:var(--accent); display:block; margin-bottom:5px;">${wordObj.pron}</span>` : ''}
+        <div style="font-size:1.1rem; font-weight:600; margin-bottom:5px;">${wordObj.mean}</div>
+        <span style="font-size:0.85rem; opacity:0.6;">${wordObj.memo || ''}</span>
     `;
 
             fb.style.display = 'block';
-
-            // 키보드 엔터 이벤트 바인딩
             nextBtn.focus();
         }
 
