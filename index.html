@@ -4183,19 +4183,20 @@
             }
         };
 
-        // [신규] 뒤로가기 버튼 처리 핸들러 (Central Back Button Logic)
+        /* --- [JS 수정] 뒤로가기 핸들러 (안전 장치 추가) --- */
         window.onpopstate = (event) => {
-            // 1. 활성화된 모달이 있다면 닫기 (UI 처리만 수행)
+            // 1. 현재 활성화된 모달 찾기
             const activeModal = document.querySelector('.modal-overlay.active');
-            if (activeModal) {
 
-                if (activeModal.id === 'setup-popup') {
-                    // 사용자가 뒤로가기를 눌러서 히스토리가 빠졌으므로, 
-                    // 다시 가짜 히스토리를 넣어 현재 상태를 유지시킴 (모달 안 닫힘)
+            if (activeModal) {
+                // [수정] ID가 정확히 'setup-popup'일 때만 막음 
+                // (finishSetup에서 ID를 바꿨으므로 완료 후에는 이 조건문에 걸리지 않음)
+                if (activeModal.id === 'setup-popup' && !appData.config.setupDone) {
                     history.pushState({ level: 3, view: 'modal', modalId: 'setup-popup' }, null, '');
                     return;
                 }
-                // history.back()을 호출하지 않고 직접 닫기만 수행 (이미 back 되어 state가 빠졌으므로)
+
+                // 그 외 일반 모달은 정상적으로 닫기
                 activeModal.classList.add('closing');
                 activeModal.classList.remove('active');
                 setTimeout(() => {
@@ -4206,22 +4207,19 @@
                 return;
             }
 
-            // 2. 퀴즈 화면이 켜져있다면 닫기
+            // 2. 퀴즈 화면 닫기 처리
             const quizScreen = document.getElementById('quiz-screen');
             if (quizScreen && quizScreen.style.display === 'flex') {
-                saveQuizProgress(); // <--- 저장 함수 호출 추가
+                saveQuizProgress();
                 quizSession.active = false;
-
                 quizScreen.style.display = 'none';
                 renderApp();
                 return;
             }
 
-            // 3. 뷰 상태 복원 (History State 기반)
+            // 3. 일반 네비게이션 처리 (History State 복원)
             if (event.state) {
                 const state = event.state;
-
-                // 상태 변수 동기화
                 if (state.view === 'home') {
                     currentTab = 'home';
                     currentGroupId = null;
@@ -4239,11 +4237,8 @@
                 } else if (state.view === 'smart') {
                     currentSmartView = state.data;
                 }
-
-                // 화면 갱신
                 renderApp();
             } else {
-                // State가 없다면 홈으로
                 currentTab = 'home';
                 currentGroupId = null;
                 renderApp();
@@ -4265,10 +4260,26 @@
         }
 
         function finishSetup() {
-            // (기존 코드와 동일, 데이터 초기화 부분만 조정)
+            // 1. 설정 완료 데이터 저장
             appData.config.setupDone = true;
             saveData();
-            document.getElementById('setup-popup').classList.remove('active');
+
+            // 2. 모달 요소 가져오기
+            const modal = document.getElementById('setup-popup');
+
+            if (modal) {
+                // [핵심] 모달의 ID를 변경하여 onpopstate의 '뒤로가기 방지 감지'를 무력화시킴
+                modal.id = 'setup-popup-closed';
+
+                // 애니메이션 없이 즉시 숨김 (가장 확실한 방법)
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
+
+            // 3. 히스토리 스택 정리 (현재 상태를 'home'으로 덮어씀)
+            history.replaceState({ level: 0, view: 'home' }, null, '');
+
+            // 4. 메인 화면 렌더링
             renderApp();
         }
 
